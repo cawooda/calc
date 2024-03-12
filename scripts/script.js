@@ -14,11 +14,12 @@ for (key of keys) {
 }
 
 $keyboard.on('click','.key',function(e){
-    console.log(e);
+
     console.log(e.target);
     display.key($(e.target).data('key'));
-    
-    $display.text(number + $(e.event).data('key'));
+
+    console.log(display.result);
+    $display.text(display.result + $(e.event).data('key'));
     
     
 });
@@ -27,44 +28,53 @@ $keyboard.on('click','.key',function(e){
 
 const display = {
     result: "0",
+    operator: "",
     display: function(number) {
-        $display.textContent(number);
+        console.log("number to display method:" + number);
+        $display.textContent = number;
     },
     key: function(key){
-        console.log(isNaN(parseInt(key)));
+        
         if (isNaN(parseInt(key))) {
         switch (key) {
-            case "-": this.subtractNumber();
-            case "+": this.addNumber();
-            case "/": this.divideNumber();
-            case "*": this.multiplyNumber();           
+            case "-": this.operator = "-";
+            case "+": this.operator = "+";
+            case "/": this.operator = "/";
+            case "*": this.operator = "*";           
             }
         } else {
-            const number = parseInt(key);
-            if (this.result == 0) {
-                this.result = number;
-                $display.textContent(this.result);
-            } else {
-                $display.textContent(this.result);
-            }
-
-        }
+            this.result = this.result + parseInt(key);
+        } 
+        
+        if (key == "=") {
+        switch (this.operator) {    
+            case "-": this.result = parseInt(this.result)-number;
+            case "+": this.result = parseInt(this.result)+number;
+            case "/": this.result = parseInt(this.result)/number;
+            case "*": this.result = parseInt(this.result)-number;         
+        }  
+    }
+        console.log(this.result)
+        
+        this.display(this.result);
+        
+        
     },
     addNumber: function(number){
         this.result = this.result + number;
-        $display.textContent(this.result);
+        $display.text(this.result);
     },
     subtractNumber: function(number){
         this.result = this.result - number;
-        $display.textContent(this.result);
+        $display.text(this.result);
     },
     multiplyNumber: function(number){
         this.result = this.result * number;
-        $display.textContent(this.result);
+        $display.text(this.result);
     },
     divideNumber: function(number){
         this.result = this.result / number;
-        $display.textContent(this.result);
+        $display.text(this.result);
     }
 
     
