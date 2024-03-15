@@ -15,66 +15,69 @@ for (key of keys) {
 
 $keyboard.on('click','.key',function(e){
 
-    console.log(e.target);
-    display.key($(e.target).data('key'));
+    
+    keyboard.keyPressed($(e.target).data('key'));
 
-    console.log(display.result);
-    $display.text(display.result + $(e.event).data('key'));
+    
+    
     
     
 });
 
+const keyboard = {
+    operator : "",
+    operatorSelected : false,
+    selectOperator : function (operator){
+        this.operator = operator;
+        display.addOperator(operator);
+        operatorSelected = true;
+    },
+    numberSelected: true,
+    selectNumber : function (number) {
+        if (this.operatorSelected) {
+            display.addNumber(number);
+        }
+    },
+    
+    keyPressed: function(key){
+        //if its not a number then select operator.
+        if (isNaN(parseInt(key))) {
+            this.selectOperator(key);
+            }
+        
+        //if it is a number then send that number to display.
+        if (!isNaN(parseInt(key))) {
+            this.numberSelected = true;
+            this.selectNumber(key);
+        }
+
+        } 
+
+
+          
+    }
 
 
 const display = {
-    result: "0",
+    show: "0",
+    result: 0,
     operator: "",
-    display: function(number) {
-        console.log("number to display method:" + number);
-        $display.textContent = number;
+    display: function() {
+        $display.text(this.result);
+        console.log("result displayed:" + this.result);
     },
-    key: function(key){
-        
-        if (isNaN(parseInt(key))) {
-        switch (key) {
-            case "-": this.operator = "-";
-            case "+": this.operator = "+";
-            case "/": this.operator = "/";
-            case "*": this.operator = "*";           
-            }
-        } else {
-            this.result = this.result + parseInt(key);
-        } 
-        
-        if (key == "=") {
-        switch (this.operator) {    
-            case "-": this.result = parseInt(this.result)-number;
-            case "+": this.result = parseInt(this.result)+number;
-            case "/": this.result = parseInt(this.result)/number;
-            case "*": this.result = parseInt(this.result)-number;         
-        }  
-    }
-        console.log(this.result)
-        
-        this.display(this.result);
-        
-        
-    },
+    
+
+
     addNumber: function(number){
         this.result = this.result + number;
         $display.text(this.result);
     },
-    subtractNumber: function(number){
-        this.result = this.result - number;
-        $display.text(this.result);
-    },
-    multiplyNumber: function(number){
-        this.result = this.result * number;
-        $display.text(this.result);
-    },
-    divideNumber: function(number){
-        this.result = this.result / number;
-        $display.text(this.result);
+    addOperator: function(operator) {
+        
+        this.operator = operator;
+        this.result = parseInt(this.result);
+        this.show = this.show + operator;
     }
 
     
